@@ -1,0 +1,16 @@
+from rest_framework.serializers import *
+from django.contrib.auth import get_user_model
+
+
+class UserSerializer(ModelSerializer):
+    """serializer for the user object"""
+
+    class Meta:
+        model = get_user_model()
+        fields = ['email','password','name']
+        extra_kwargs = {'password':{'write_only': True, 'min_length':5}}
+
+    def create(self,validated_data):
+        """create and return a user with encrypted password"""
+        return get_user_model().objects.create_user(**validated_data)
+
